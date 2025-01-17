@@ -1,26 +1,26 @@
+import { Employee } from 'src/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Employee } from './employee.entity';
 
-@Entity('salaries') // Represents the "salaries" table
+@Entity('salaries') 
 export class Salary {
   @PrimaryGeneratedColumn()
-  salaryId: number; // Auto-incremented primary key
+  salaryId: number; 
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  baseSalary: number; // Base salary
+  baseSalary: number; 
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  deductions: number; // Deductions (default is 0)
+  deductions: number; 
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  allowances: number; // Allowances (default is 0)
+  allowances: number; 
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  netSalary: number; // Final salary after deductions and allowances
+  netSalary: number; 
 
   @Column({ type: 'date' })
-  paymentDate: Date; // Payment date
+  paymentDate: Date; 
 
   @ManyToOne(() => Employee, (employee) => employee.salaries)
-  employee: Employee; // Relation to "Employee" table
+  employee: Employee; 
 }

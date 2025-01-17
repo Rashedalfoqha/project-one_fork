@@ -11,14 +11,14 @@ export class Leave {
   leaveType: 'Annual' | 'Sick' | 'Emergency'; // Type of leave
 
   @Column({ type: 'date' })
-  startDate: Date; // Start date of leave
+  startDate: Date; 
 
   @Column({ type: 'date' })
-  endDate: Date; // End date of leave
+  endDate: Date; 
 
   @Column({ type: 'enum', enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' })
-  status: 'Pending' | 'Approved' | 'Rejected'; // Leave status
+  status: 'Pending' | 'Approved' | 'Rejected'; 
 
   @ManyToOne(() => Employee, (employee) => employee.leaves)
-  employee: Employee; // Relation to "Employee" table
+  employee: Employee; 
 }

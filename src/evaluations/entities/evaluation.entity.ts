@@ -1,26 +1,25 @@
 import { Employee } from 'src/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-@Entity('evaluations') // Represents the "evaluations" table
+@Entity('evaluations') 
 export class Evaluation {
   @PrimaryGeneratedColumn()
-  evaluationId: number; // Auto-incremented primary key
+  evaluationId: number; 
 
   @Column({ type: 'int' })
-  qualityScore: number; // Work quality score
+  qualityScore: number; 
 
   @Column({ type: 'int' })
-  commitmentScore: number; // Commitment score
+  commitmentScore: number; 
 
   @Column({ type: 'int' })
-  skillsScore: number; // Skills score
+  skillsScore: number; 
 
   @Column({ type: 'text', nullable: true })
-  comments: string; // Optional comments
+  comments: string; 
 
   @Column({ type: 'date' })
-  evaluationDate: Date; // Date of evaluation
+  evaluationDate: Date; 
 
   @ManyToOne(() => Employee, (employee) => employee.evaluations)
-  employee: Employee; // Relation to "Employee" table
-}
+  employee: Employee; }

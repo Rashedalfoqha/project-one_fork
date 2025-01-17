@@ -29,7 +29,7 @@ import { Salary } from './salaries/entities/salary.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Employee,Attendance,Evaluation,Department,Leave,Salary],
+      entities: [Employee, Attendance, Evaluation, Department, Leave, Salary],
       synchronize: true,
     }),
 

@@ -16,30 +16,30 @@ export class Employee {
   @Column({ unique: true, length: 255 })
   email: string; // Unique email
 
-  @Column({ length: 15, nullable: true })
-  phone: string; // Phone number (optional)
+  @Column({ length: 10, nullable: true })
+  phone: string; 
 
   @Column({ type: 'text', nullable: true })
-  address: string; // Address (optional)
+  address: string; 
 
   @Column({ type: 'date' })
-  hireDate: Date; // Hiring date
+  hireDate: Date; 
 
   @Column({ length: 100 })
-  position: string; // Job title
+  position: string; 
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  salary: number; // Base salary
+  salary: number; 
 
   @ManyToOne(() => Department, (department) => department.employees)
-  department: Department; // Relation to "Department" table
+  department: Department; 
 
   @OneToMany(() => Salary, (salary) => salary.employee)
-  salaries: Salary[]; // One employee can have multiple salary records
+  salaries: Salary[]; 
 
   @OneToMany(() => Leave, (leave) => leave.employee)
-  leaves: Leave[]; // One employee can have multiple leave requests
+  leaves: Leave[]; 
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.employee)
-  evaluations: Evaluation[]; // One employee can have multiple evaluations
+  evaluations: Evaluation[]; 
 }

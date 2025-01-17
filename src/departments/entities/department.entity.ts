@@ -1,16 +1,16 @@
 import { Employee } from 'src/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
-@Entity('departments') // Represents the "departments" table
+@Entity('departments') 
 export class Department {
   @PrimaryGeneratedColumn()
-  departmentId: number; // Auto-incremented primary key
+  departmentId: number; 
 
   @Column({ length: 100 })
-  name: string; // Department name
+  name: string; 
 
   @Column({ type: 'text', nullable: true })
-  description: string; // Description (optional)
+  description: string; 
 
   @OneToMany(() => Employee, (employee) => employee.department)
   employees: Employee[];

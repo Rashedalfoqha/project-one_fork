@@ -1,20 +1,20 @@
 import { Employee } from 'src/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-@Entity('attendance') // Represents the "attendance" table
+@Entity('attendance') 
 export class Attendance {
   @PrimaryGeneratedColumn()
-  attendanceId: number; // Auto-incremented primary key
+  attendanceId: number; 
 
   @Column({ type: 'time' })
-  checkInTime: string; // Check-in time
+  checkInTime: string; 
 
-  @Column({ type: 'time', nullable: true })
-  checkOutTime: string; // Check-out time (optional)
+  @Column({ type: 'time' })
+  checkOutTime: string; 
 
   @Column({ type: 'date' })
-  attendanceDate: Date; // Attendance date
+  attendanceDate: Date;
 
-  @ManyToOne(() => Employee, (employee) => employee.attendance)
-  employee: Employee; 
+  @ManyToOne(() => Employee, (employee) => employee.employeeId)
+  employee: Employee;
 }

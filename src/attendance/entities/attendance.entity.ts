@@ -1,20 +1,28 @@
 import { Employee } from 'src/employees/entities/employee.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
-@Entity('attendance') 
+@Entity('attendance')
 export class Attendance {
   @PrimaryGeneratedColumn()
-  attendanceId: number; 
+  attendanceId: number;
 
   @Column({ type: 'time' })
-  checkInTime: string; 
+  checkInTime: string;
 
   @Column({ type: 'time' })
-  checkOutTime: string; 
+  checkOutTime: string;
 
   @Column({ type: 'date' })
   attendanceDate: Date;
+  
 
-  @ManyToOne(() => Employee, (employee) => employee.employeeId)
-  employee: Employee;
+  @OneToOne(() => Employee, (employee) => employee.attendance)
+  employeeId: Employee;
 }

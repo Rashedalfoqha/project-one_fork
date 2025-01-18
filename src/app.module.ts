@@ -15,6 +15,12 @@ import { Evaluation } from './evaluations/entities/evaluation.entity';
 import { Department } from './departments/entities/department.entity';
 import { Leave } from './leaves/entities/leaf.entity';
 import { Salary } from './salaries/entities/salary.entity';
+import { AdminModule } from './admin/admin.module';
+import { CompanyModule } from './company/company.module';
+import { LocationModule } from './location/location.module';
+import { Location } from './location/entities/location.entity';
+import { Company } from './company/entities/company.entity';
+import { Admin } from './admin/entities/admin.entity';
 
 @Module({
   imports: [
@@ -29,7 +35,17 @@ import { Salary } from './salaries/entities/salary.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Employee, Attendance, Evaluation, Department, Leave, Salary],
+      entities: [
+        Employee,
+        Attendance,
+        Evaluation,
+        Department,
+        Leave,
+        Salary,
+        Location,
+        Company,
+        Admin,
+      ],
       synchronize: true,
     }),
 
@@ -44,6 +60,12 @@ import { Salary } from './salaries/entities/salary.entity';
     EvaluationsModule,
 
     AttendanceModule,
+
+    AdminModule,
+
+    CompanyModule,
+
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

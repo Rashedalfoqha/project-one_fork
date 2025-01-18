@@ -1,9 +1,19 @@
+import { Attendance } from 'src/attendance/entities/attendance.entity';
 import { Department } from 'src/departments/entities/department.entity';
 import { Evaluation } from 'src/evaluations/entities/evaluation.entity';
 import { Leave } from 'src/leaves/entities/leaf.entity';
+import { Location } from 'src/location/entities/location.entity';
 import { Salary } from 'src/salaries/entities/salary.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  JoinTable,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity('employees') // Represents the "employees" table
 export class Employee {
@@ -17,29 +27,36 @@ export class Employee {
   email: string; // Unique email
 
   @Column({ length: 10, nullable: true })
-  phone: string; 
+  phone: string;
 
   @Column({ type: 'text', nullable: true })
-  address: string; 
+  address: string;
 
   @Column({ type: 'date' })
-  hireDate: Date; 
+  hireDate: Date;
 
   @Column({ length: 100 })
-  position: string; 
+  position: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  salary: number; 
+  salary: number;
 
   @ManyToOne(() => Department, (department) => department.employees)
-  department: Department; 
+  department: Department;
 
   @OneToMany(() => Salary, (salary) => salary.employee)
-  salaries: Salary[]; 
+  salaries: Salary[];
 
   @OneToMany(() => Leave, (leave) => leave.employee)
-  leaves: Leave[]; 
+  leaves: Leave[];
 
   @OneToMany(() => Evaluation, (evaluation) => evaluation.employee)
-  evaluations: Evaluation[]; 
+  evaluations: Evaluation[];
+
+  @OneToOne(() => Location, (location) => location.employee)
+  location: Location;
+  // @OneToOne(Attendance,(attendance) => attendance.employee)
+  // attendance: Attendance[];
+  @OneToMany(() => Attendance, (attendance) => attendance.employee)
+  attendances: Attendance[];
 }

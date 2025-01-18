@@ -53,8 +53,10 @@ export class Employee {
   @OneToMany(() => Evaluation, (evaluation) => evaluation.employee)
   evaluations: Evaluation[];
 
-  @OneToOne((attendance) => attendance.employee)
-  attendance: Attendance[];
   @OneToOne(() => Location, (location) => location.employee)
   location: Location;
+  // @OneToOne(Attendance,(attendance) => attendance.employee)
+  // attendance: Attendance[];
+  @OneToMany(() => Attendance, (attendance) => attendance.employee)
+  attendances: Attendance[];
 }

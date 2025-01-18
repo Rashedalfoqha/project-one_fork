@@ -21,8 +21,9 @@ export class Attendance {
 
   @Column({ type: 'date' })
   attendanceDate: Date;
-  
 
-  @OneToOne(() => Employee, (employee) => employee.attendance)
-  employeeId: Employee;
+  @ManyToOne(() => Employee, (employee) => employee.attendances, {
+    onDelete: 'CASCADE',
+  })
+  employee: Employee;
 }

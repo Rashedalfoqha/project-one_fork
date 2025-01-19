@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { LeavesService } from './leaves.service';
-import { CreateLeafDto } from './dto/create-leaf.dto';
-import { UpdateLeafDto } from './dto/update-leaf.dto';
+import { CreateLeaveDto } from './dto/create-leave.dto';
+import { UpdateLeaveDto } from './dto/update-leave.dto';
 
 @Controller('leaves')
 export class LeavesController {
   constructor(private readonly leavesService: LeavesService) {}
 
   @Post()
-  create(@Body() createLeafDto: CreateLeafDto) {
-    return this.leavesService.create(createLeafDto);
+  create(@Body() createLeaveDto: CreateLeaveDto) {
+    return this.leavesService.create(createLeaveDto);
   }
 
   @Get()
@@ -23,8 +23,8 @@ export class LeavesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLeafDto: UpdateLeafDto) {
-    return this.leavesService.update(+id, updateLeafDto);
+  update(@Param('id') id: string, @Body() updateLeaveDto: UpdateLeaveDto) {
+    return this.leavesService.update(+id, updateLeaveDto);
   }
 
   @Delete(':id')

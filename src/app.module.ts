@@ -13,7 +13,7 @@ import { Employee } from './employees/entities/employee.entity';
 import { Attendance } from './attendance/entities/attendance.entity';
 import { Evaluation } from './evaluations/entities/evaluation.entity';
 import { Department } from './departments/entities/department.entity';
-import { Leave } from './leaves/entities/leaf.entity';
+import { Leave } from './leaves/entities/leave.entity';
 import { Salary } from './salaries/entities/salary.entity';
 import { AdminModule } from './admin/admin.module';
 import { CompanyModule } from './company/company.module';

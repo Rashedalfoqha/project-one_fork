@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLeafDto } from './dto/create-leaf.dto';
-import { UpdateLeafDto } from './dto/update-leaf.dto';
+import { CreateLeaveDto } from './dto/create-leave.dto';
+import { UpdateLeaveDto } from './dto/update-leave.dto';
 
 @Injectable()
 export class LeavesService {
-  create(createLeafDto: CreateLeafDto) {
-    return 'This action adds a new leaf';
+  create(createLeaveDto: CreateLeaveDto) {
+    return 'This action adds a new leave';
   }
 
   findAll() {
@@ -13,14 +13,14 @@ export class LeavesService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} leaf`;
+    return `This action returns a #${id} leave`;
   }
 
-  update(id: number, updateLeafDto: UpdateLeafDto) {
-    return `This action updates a #${id} leaf`;
+  update(id: number, updateLeaveDto: UpdateLeaveDto) {
+    return `This action updates a #${id} leave`;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} leaf`;
+    return `This action removes a #${id} leave`;
   }
 }

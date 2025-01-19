@@ -1,7 +1,7 @@
 import { Attendance } from 'src/attendance/entities/attendance.entity';
 import { Department } from 'src/departments/entities/department.entity';
 import { Evaluation } from 'src/evaluations/entities/evaluation.entity';
-import { Leave } from 'src/leaves/entities/leaf.entity';
+import { Leave } from 'src/leaves/entities/leave.entity';
 import { Location } from 'src/location/entities/location.entity';
 import { Salary } from 'src/salaries/entities/salary.entity';
 import {
@@ -55,8 +55,8 @@ export class Employee {
 
   @OneToOne(() => Location, (location) => location.employee)
   location: Location;
-  // @OneToOne(Attendance,(attendance) => attendance.employee)
-  // attendance: Attendance[];
+
+  // @OneToOne(Attendance,(attendance) => attendance.employee) // One-to-one relationship with Attendance entity, with employeeId as the foreign key
   @OneToMany(() => Attendance, (attendance) => attendance.employee)
   attendances: Attendance[];
 }

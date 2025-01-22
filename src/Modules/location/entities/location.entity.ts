@@ -1,5 +1,5 @@
-import { Company } from 'src/company/entities/company.entity';
-import { Employee } from 'src/employees/entities/employee.entity';
+import { Company } from 'src/Modules/company/entities/company.entity';
+import { Employee } from 'src/Modules/employees/entities/employee.entity';
 import {
   Column,
   Entity,

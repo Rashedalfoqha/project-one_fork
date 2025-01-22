@@ -1,4 +1,4 @@
-import { Employee } from 'src/employees/entities/employee.entity';
+import { Employee } from 'src/Modules/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('salaries') 
@@ -22,5 +22,5 @@ export class Salary {
   paymentDate: Date; 
 
   @ManyToOne(() => Employee, (employee) => employee.salaries)
-  employee: Employee; 
+  employee: Employee;
 }

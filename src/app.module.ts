@@ -1,40 +1,39 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { EmployeesModule } from './employees/employees.module';
-import { DepartmentsModule } from './departments/departments.module';
-import { SalariesModule } from './salaries/salaries.module';
-import { LeavesModule } from './leaves/leaves.module';
-import { EvaluationsModule } from './evaluations/evaluations.module';
-import { AttendanceModule } from './attendance/attendance.module';
-import { Employee } from './employees/entities/employee.entity';
-import { Attendance } from './attendance/entities/attendance.entity';
-import { Evaluation } from './evaluations/entities/evaluation.entity';
-import { Department } from './departments/entities/department.entity';
-import { Leave } from './leaves/entities/leave.entity';
-import { Salary } from './salaries/entities/salary.entity';
-import { AdminModule } from './admin/admin.module';
-import { CompanyModule } from './company/company.module';
-import { LocationModule } from './location/location.module';
-import { Location } from './location/entities/location.entity';
-import { Company } from './company/entities/company.entity';
-import { Admin } from './admin/entities/admin.entity';
+import { join } from 'path';
+import { EmployeesModule } from './Modules/employees/employees.module';
+import { DepartmentsModule } from './Modules/departments/departments.module';
+import { SalariesModule } from './Modules/salaries/salaries.module';
+import { LeavesModule } from './Modules/leaves/leaves.module';
+import { EvaluationsModule } from './Modules/evaluations/evaluations.module';
+import { AttendanceModule } from './Modules/attendance/attendance.module';
+import { AdminModule } from './Modules/admin/admin.module';
+import { CompanyModule } from './Modules/company/company.module';
+import { LocationModule } from './Modules/location/location.module';
+
+// Import entities
+import { Employee } from './Modules/employees/entities/employee.entity';
+import { Attendance } from './Modules/attendance/entities/attendance.entity';
+import { Evaluation } from './Modules/evaluations/entities/evaluation.entity';
+import { Department } from './Modules/departments/entities/department.entity';
+import { Leave } from './Modules/leaves/entities/leave.entity';
+import { Salary } from './Modules/salaries/entities/salary.entity';
+import { Location } from './Modules/location/entities/location.entity';
+import { Company } from './Modules/company/entities/company.entity';
+import { Admin } from './Modules/admin/entities/admin.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      host: process.env.DATABASE_HOST,
+      port: +process.env.DATABASE_PORT,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [
         Employee,
         Attendance,
@@ -45,29 +44,24 @@ import { Admin } from './admin/entities/admin.entity';
         Location,
         Company,
         Admin,
+        join(__dirname, '**', '*.entity.{ts,js}'),
       ],
-      synchronize: true,
+      synchronize:
+        process.env.TYPEORM_SYNC === 'true' &&
+        process.env.NODE_ENV !== 'production',
     }),
 
     EmployeesModule,
-
     DepartmentsModule,
-
     SalariesModule,
-
     LeavesModule,
-
     EvaluationsModule,
-
     AttendanceModule,
-
     AdminModule,
-
     CompanyModule,
-
     LocationModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

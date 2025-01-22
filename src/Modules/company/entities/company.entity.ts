@@ -1,5 +1,5 @@
-import { Admin } from 'src/admin/entities/admin.entity';
-import { Location } from 'src/location/entities/location.entity';
+import { Admin } from 'src/Modules/admin/entities/admin.entity';
+import { Location } from 'src/Modules/location/entities/location.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

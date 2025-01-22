@@ -1,9 +1,9 @@
-import { Attendance } from 'src/attendance/entities/attendance.entity';
-import { Department } from 'src/departments/entities/department.entity';
-import { Evaluation } from 'src/evaluations/entities/evaluation.entity';
-import { Leave } from 'src/leaves/entities/leave.entity';
-import { Location } from 'src/location/entities/location.entity';
-import { Salary } from 'src/salaries/entities/salary.entity';
+import { Attendance } from 'src/Modules/attendance/entities/attendance.entity';
+import { Department } from 'src/Modules/departments/entities/department.entity';
+import { Evaluation } from 'src/Modules/evaluations/entities/evaluation.entity';
+import { Leave } from 'src/Modules/leaves/entities/leave.entity';
+import { Location } from 'src/Modules/location/entities/location.entity';
+import { Salary } from 'src/Modules/salaries/entities/salary.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

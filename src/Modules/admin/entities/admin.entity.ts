@@ -1,4 +1,4 @@
-import { Company } from 'src/company/entities/company.entity';
+import { Company } from 'src/Modules/company/entities/company.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('admins') // Represents the "admins" table

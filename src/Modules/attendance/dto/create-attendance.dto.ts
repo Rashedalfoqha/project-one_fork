@@ -1,7 +1,16 @@
+import { IsString, IsNotEmpty, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
+
 export class CreateAttendanceDto {
-  checkInTime: string; // This is a string type
+  @IsString()
+  @IsNotEmpty({ message: 'Check-in time is required' }) // Ensures it's not empty
+  checkInTime: string;
 
-  checkOutTime: string; // This is a string type
+  @IsString()
+  @IsNotEmpty({ message: 'Check-out time is required' }) // Ensures it's not empty
+  checkOutTime: string;
 
-  attendanceDate: Date; // This is a date type
+  @IsDate({ message: 'Attendance date must be a valid date' }) // Validates it as a Date object
+  @Type(() => Date)
+  attendanceDate: Date;
 }

@@ -18,6 +18,8 @@ export class Admin {
   @Column({ default: true })
   isActive: boolean; // Whether the admin account is active
 
-  @ManyToOne(() => Company, (company) => company.admins, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Company, (company) => company.admins, {
+    onDelete: 'CASCADE',
+  })
   company: Company; // Each admin belongs to one company
 }

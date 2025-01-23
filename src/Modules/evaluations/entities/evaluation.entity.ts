@@ -1,25 +1,26 @@
 import { Employee } from 'src/Modules/employees/entities/employee.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
-@Entity('evaluations') 
+@Entity('evaluations')
 export class Evaluation {
   @PrimaryGeneratedColumn()
-  evaluationId: number; 
+  evaluationId: number;
 
   @Column({ type: 'int' })
-  qualityScore: number; 
+  qualityScore: number;
 
   @Column({ type: 'int' })
-  commitmentScore: number; 
+  commitmentScore: number;
 
   @Column({ type: 'int' })
-  skillsScore: number; 
+  skillsScore: number;
 
   @Column({ type: 'text', nullable: true })
-  comments: string; 
+  comments: string;
 
   @Column({ type: 'date' })
-  evaluationDate: Date; 
+  evaluationDate: Date;
 
   @ManyToOne(() => Employee, (employee) => employee.evaluations)
-  employee: Employee; }
+  employee: Employee;
+}

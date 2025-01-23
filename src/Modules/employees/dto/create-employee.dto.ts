@@ -1,15 +1,38 @@
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsPhoneNumber,
+  IsDate,
+  IsNumber,
+  IsPositive,
+} from 'class-validator';
+
 export class CreateEmployeeDto {
-  name: string; // This is a string type
+  @IsString({ message: 'Name must be a string' })
+  @IsNotEmpty({ message: 'Name is required' })
+  name: string; // Employee name
 
-  email: string; // This is a string type
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @IsNotEmpty({ message: 'Email is required' })
+  email: string; // Employee email
 
-  phone: string; // This is a string type
+  @IsPhoneNumber(null, { message: 'Phone must be a valid phone number' }) // `null` can be used for any region
+  @IsNotEmpty({ message: 'Phone is required' })
+  phone: string; // Employee phone number
 
-  address: string; // This is a string type
+  @IsString({ message: 'Address must be a string' })
+  @IsNotEmpty({ message: 'Address is required' })
+  address: string; // Employee address
 
-  hireDate: Date; // This is a date type
+  @IsDate({ message: 'Hire date must be a valid date' })
+  hireDate: Date; // Employee hire date
 
-  position: string; // This is a string type
+  @IsString({ message: 'Position must be a string' })
+  @IsNotEmpty({ message: 'Position is required' })
+  position: string; // Employee position
 
-  salary: number; // This is a number type
+  @IsNumber({}, { message: 'Salary must be a valid number' })
+  @IsPositive({ message: 'Salary must be a positive number' })
+  salary: number; // Employee salary
 }

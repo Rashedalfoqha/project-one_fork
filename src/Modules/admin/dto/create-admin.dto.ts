@@ -1,9 +1,24 @@
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  MinLength,
+  IsBoolean,
+} from 'class-validator';
+
 export class CreateAdminDto {
-  name: string; // This is a string type
+  @IsString()
+  @IsNotEmpty({ message: 'Name is required' })
+  name: string;
 
-  email: string; // This is a string type
+  @IsEmail({}, { message: 'Invalid email format' })
+  email: string;
 
-  password: string; // This is a string type
+  @IsString()
+  @IsNotEmpty({ message: 'Password is required' })
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  password: string;
 
-  isActive: boolean; // This is a boolean type
+  @IsBoolean({ message: 'isActive must be a boolean value' })
+  isActive: boolean;
 }

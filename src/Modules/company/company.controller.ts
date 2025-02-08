@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -36,7 +38,11 @@ export class CompanyController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companyService.remove(+id);
-  }
+  async remove(@Param('id') id: number) {
+      try {
+        return await this.companyService.remove(id);
+      } catch (error) {
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      }
+    }
 }

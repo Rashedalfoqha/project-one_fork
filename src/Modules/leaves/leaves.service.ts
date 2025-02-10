@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLeaveDto } from './dto/create-leave.dto';
 import { UpdateLeaveDto } from './dto/update-leave.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Leave } from './entities/leave.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class LeavesService {
-  create(createLeaveDto: CreateLeaveDto) {
-    return 'This action adds a new leave';
+  constructor(
+    @InjectRepository(Leave)
+    private readonly leaveRepository: Repository<Leave>,
+  ) {}
+  async create(createLeaveDto: CreateLeaveDto): Promise<Leave> {
+    const leave = await this.leaveRepository.create(createLeaveDto);
+    return this.leaveRepository.save(leave);
   }
 
-  findAll() {
-    return `This action returns all leaves`;
+  async findAll(): Promise<Leave[]> {
+    const leaves = await this.leaveRepository.find({ relations: ['employee'] });
+    return leaves;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} leave`;
+  async findOne(id: number): Promise<Leave> {
+    const leaves = await this.leaveRepository.findOne({
+      where: { leaveId: id },
+      relations: ['employee'],
+    });
+    return leaves;
   }
 
-  update(id: number, updateLeaveDto: UpdateLeaveDto) {
-    return `This action updates a #${id} leave`;
+  async update(id: number, updateLeaveDto: UpdateLeaveDto): Promise<Leave> {
+    const leave = await this.leaveRepository.preload({
+      leaveId: id,
+      ...updateLeaveDto,
+    });
+    if (!leave) {
+      throw new Error('Leave not found');
+    }
+    return this.leaveRepository.save(leave);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} leave`;
+  async remove(id: number) {
+    const results = await this.leaveRepository.delete(id);
+    if (results.affected === 0) {
+      throw new Error('Leave not found');
+    }
   }
 }

@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { Employee } from './entities/employee.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class EmployeesService {
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
+    const employee = await this.employeeRepository.create(createEmployeeDto);
+    return this.employeeRepository.save(employee);
   }
 
-  findAll() {
-    return `This action returns all employees`;
+  async findAll(): Promise<Employee[]> {
+    return await this.employeeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async findOne(id: number): Promise<Employee> {
+    const employee = await this.employeeRepository.findOne({
+      where: { employeeId: id },
+      relations: [
+        'department',
+        'salaries',
+        'leaves',
+        'evaluations',
+        'location',
+        'attendances',
+      ],
+    });
+    return employee;
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
+  async update(
+    id: number,
+    updateEmployeeDto: UpdateEmployeeDto,
+  ): Promise<Employee> {
+    const employee = await this.employeeRepository.preload({
+      employeeId: id,
+      ...updateEmployeeDto,
+    });
+    return this.employeeRepository.save(employee);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async remove(id: number): Promise<void> {
+    const result = await this.employeeRepository.delete(id);
+    if (result.affected === 0) {
+      throw new Error(`Employee with ID ${id} not found`);
+    }
   }
 }

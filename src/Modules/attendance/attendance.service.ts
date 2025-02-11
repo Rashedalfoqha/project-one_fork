@@ -33,7 +33,10 @@ export class AttendanceService {
     return attendance;
   }
 
-  async update(id: number, updateAttendanceDto: UpdateAttendanceDto): Promise<Attendance> {
+  async update(
+    id: number,
+    updateAttendanceDto: UpdateAttendanceDto,
+  ): Promise<Attendance> {
     const attendance = await this.attendanceRepository.preload({
       attendanceId: id,
       ...updateAttendanceDto,

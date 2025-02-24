@@ -11,7 +11,7 @@ import {
 @Entity('locations')
 export class Location {
   @PrimaryGeneratedColumn()
-  locationId: Number;
+  locationId: number;
   @Column()
   latitude: string;
   @Column()

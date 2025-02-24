@@ -1,51 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Location } from './entities/location.entity';
 import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Location } from './entities/location.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class LocationService {
   constructor(
     @InjectRepository(Location)
-    private readonly locationRepositroy: Repository<Location>,
+    private readonly locationRepository: Repository<Location>,
   ) {}
-  async create(createLocationDto: CreateLocationDto): Promise<Location[]> {
-    const location = await this.locationRepositroy.create(createLocationDto);
-    return await this.locationRepositroy.save(location);
+
+  async create(createLocationDto: CreateLocationDto): Promise<Location> {
+    const location = await this.locationRepository.create(createLocationDto);
+    return  this.locationRepository.save(location);
   }
 
   async findAll(): Promise<Location[]> {
-    const location = await this.locationRepositroy.find({
-      relations: ['employees'],
-    });
-    return location;
+    return await this.locationRepository.find({ relations: ['employees'] });
   }
 
   async findOne(id: number): Promise<Location> {
-    const location = await this.locationRepositroy.findOne({
+    const location = await this.locationRepository.findOne({
       where: { locationId: id },
       relations: ['employees'],
     });
+    if (!location) {
+      throw new NotFoundException(`Location with ID ${id} not found`);
+    }
     return location;
   }
 
-  async update(
-    id: number,
-    updateLocationDto: UpdateLocationDto,
-  ): Promise<Location> {
-    const location = await this.locationRepositroy.preload({
+  async update(id: number, updateLocationDto: UpdateLocationDto): Promise<Location> {
+    const location = await this.locationRepository.preload({
       locationId: id,
       ...updateLocationDto,
     });
-    return location;
+    if (!location) {
+      throw new NotFoundException(`Location with ID ${id} not found`);
+    }
+    return await this.locationRepository.save(location);
   }
 
   async remove(id: number): Promise<void> {
-    const result = await this.locationRepositroy.delete(id);
+    const result = await this.locationRepository.delete(id);
     if (result.affected === 0) {
-      throw new Error(`Location with ID ${id} not found`);
+      throw new NotFoundException(`Location with ID ${id} not found`);
     }
   }
 }

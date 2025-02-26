@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module ,OnModuleInit} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
@@ -11,7 +11,7 @@ import { AttendanceModule } from './Modules/attendance/attendance.module';
 import { AdminModule } from './Modules/admin/admin.module';
 import { CompanyModule } from './Modules/company/company.module';
 import { LocationModule } from './Modules/location/location.module';
-
+import { SeederService } from './seeder/seeder.service';
 // Import entities
 import { Employee } from './Modules/employees/entities/employee.entity';
 import { Attendance } from './Modules/attendance/entities/attendance.entity';
@@ -48,9 +48,10 @@ import { Admin } from './Modules/admin/entities/admin.entity';
       ],
       synchronize:
         process.env.TYPEORM_SYNC === 'true' &&
-        process.env.NODE_ENV !== 'production',
+        process.env.NODE_ENV !== 'production'
     }),
-
+   
+    TypeOrmModule.forFeature([Employee]), // Register Employee entity
     EmployeesModule,
     DepartmentsModule,
     SalariesModule,
@@ -62,14 +63,18 @@ import { Admin } from './Modules/admin/entities/admin.entity';
     LocationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [SeederService],
 })
-export class AppModule {
-  constructor() {
+
+export class AppModule implements OnModuleInit {
+  constructor(private readonly seederService: SeederService) {
     console.log(process.env.DATABASE_HOST);
     console.log(process.env.DATABASE_PORT);
     console.log(process.env.DATABASE_USER);
     console.log(process.env.DATABASE_PASSWORD);
     console.log(process.env.DATABASE_NAME);
+  }
+  async onModuleInit() {
+    await this.seederService.seed(); // Run seeding logic on app start
   }
 }

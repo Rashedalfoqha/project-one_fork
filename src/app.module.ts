@@ -48,8 +48,9 @@ import { Admin } from './Modules/admin/entities/admin.entity';
       ],
       synchronize:
         process.env.TYPEORM_SYNC === 'true' &&
-        process.env.NODE_ENV !== 'production',
+        process.env.NODE_ENV !== 'production'
     }),
+   
 
     EmployeesModule,
     DepartmentsModule,
@@ -64,6 +65,7 @@ import { Admin } from './Modules/admin/entities/admin.entity';
   controllers: [],
   providers: [],
 })
+
 export class AppModule {
   constructor() {
     console.log(process.env.DATABASE_HOST);

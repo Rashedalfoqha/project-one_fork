@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsPositive,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateEmployeeDto {
   @IsString({ message: 'Name must be a string' })
@@ -25,6 +26,7 @@ export class CreateEmployeeDto {
   @IsNotEmpty({ message: 'Address is required' })
   address: string; // Employee address
 
+  @Transform(({ value }) => new Date(value))
   @IsDate({ message: 'Hire date must be a valid date' })
   hireDate: Date; // Employee hire date
 

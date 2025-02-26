@@ -6,6 +6,7 @@ import {
   Max,
   IsNotEmpty,
 } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class CreateEvaluationDto {
   @IsNumber({}, { message: 'Quality score must be a valid number' })
@@ -29,4 +30,6 @@ export class CreateEvaluationDto {
 
   @IsDate({ message: 'Evaluation date must be a valid date' })
   evaluationDate: Date; // The date of the evaluation
+  @Column({ type: 'number' })
+  employeeId: number;
 }

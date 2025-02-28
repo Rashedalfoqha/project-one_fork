@@ -29,4 +29,52 @@ describe('EvaluationsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  describe('create', () => {
+    it('should create a new evaluation', async () => {
+      const createEvaluationDto: CreateEvaluationDto = {
+        evaluationType: 'Mid Year',
+        evaluationDate: new Date(),
+        evaluationPeriod: '2022',
+        evaluationGrade: 'A',
+        employeeId: 1,
+      };
+      const evaluation = await service.create(createEvaluationDto);
+      expect(evaluation).toEqual({ evaluationId: 1, ...createEvaluationDto });
+      expect(repository.save).toHaveBeenCalled();
+    });
+  });
+  describe('findAll', () => { 
+    it('should return an array of evaluations', async () => {
+      const evaluations = await service.findAll();
+      expect(evaluations).toEqual([{ evaluationId: 1 }]);
+      expect(repository.find).toHaveBeenCalled();
+    });
+  });
+  describe('findOne', () => {
+    it('should return an evaluation', async () => {
+      const evaluation = await service.findOne(1);
+      expect(evaluation).toEqual({ evaluationId: 1 });
+      expect(repository.findOne).toHaveBeenCalled();
+    });
+  });
+  describe('update', () => {
+    it('should update an evaluation', async () => {
+      const updateEvaluationDto: CreateEvaluationDto = {
+        evaluationType: 'Mid Year',
+        evaluationDate: new Date(),
+        evaluationPeriod: '2022',
+        evaluationGrade: 'A',
+        employeeId: 1,
+      };
+      const evaluation = await service.update(1, updateEvaluationDto);
+      expect(evaluation).toEqual({ evaluationId: 1, ...updateEvaluationDto });
+      expect(repository.save).toHaveBeenCalled();
+    });
+  });
+  describe('remove', () => {
+    it('should delete an evaluation', async () => {
+      await service.remove(1);
+      expect(repository.delete).toHaveBeenCalled();
+    });
+  });
 });

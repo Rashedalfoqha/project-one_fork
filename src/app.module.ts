@@ -51,7 +51,7 @@ import { Admin } from './Modules/admin/entities/admin.entity';
         process.env.NODE_ENV !== 'production'
     }),
    
-    TypeOrmModule.forFeature([Employee]), // Register Employee entity
+    TypeOrmModule.forFeature([Employee,Department]), // Register Employee entity
     EmployeesModule,
     DepartmentsModule,
     SalariesModule,

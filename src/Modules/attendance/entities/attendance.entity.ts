@@ -14,10 +14,10 @@ export class Attendance {
   attendanceId: number;
 
   @Column({ type: 'time' })
-  checkInTime: string;
+  checkInTime: Date;
 
   @Column({ type: 'time' })
-  checkOutTime: string;
+  checkOutTime: Date;
 
   @Column({ type: 'date' })
   attendanceDate: Date;

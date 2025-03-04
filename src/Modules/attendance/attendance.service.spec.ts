@@ -41,10 +41,10 @@ describe('AttendanceService', () => {
   describe('create', () => {
     it('should create a new attendance', async () => {
       const createAttendanceDto: CreateAttendanceDto = {
-        employeeId: 1,
-        checkIn: new Date(),
-        checkOut: new Date(),
-        status: 'Present',
+        attendanceId: 1,
+        checkInTime: new Date(),
+        checkOutTime: new Date(),
+        attendanceDate:  new Date(),
       };
       const attendance = await service.create(createAttendanceDto);
       expect(attendance).toEqual({ attendanceId: 1, ...createAttendanceDto });
@@ -68,10 +68,10 @@ describe('AttendanceService', () => {
   describe('update', () => {
     it('should update an attendance', async () => {
       const updateAttendanceDto: CreateAttendanceDto = {
-        employeeId: 1,
-        checkIn: new Date(),
-        checkOut: new Date(),
-        status: 'Present',
+        attendanceId: 1,
+        checkInTime: new Date(),
+        checkOutTime: new Date(),
+        attendanceDate: new Date(),
       };
       const attendance = await service.update(1, updateAttendanceDto);
       expect(attendance).toEqual({ attendanceId: 1, ...updateAttendanceDto });

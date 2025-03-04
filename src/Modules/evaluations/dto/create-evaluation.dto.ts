@@ -9,6 +9,8 @@ import {
 import { Column } from 'typeorm';
 
 export class CreateEvaluationDto {
+  evaluationId: number; // Auto-incremented primary key
+
   @IsNumber({}, { message: 'Quality score must be a valid number' })
   @Min(0, { message: 'Quality score must be at least 0' })
   @Max(10, { message: 'Quality score cannot exceed 10' })

@@ -10,7 +10,7 @@ export class LeavesService {
   constructor(
     @InjectRepository(Leave)
     private readonly leaveRepository: Repository<Leave>,
-  ) {}
+  ) { }
   async create(createLeaveDto: CreateLeaveDto): Promise<Leave> {
     const leave = await this.leaveRepository.create(createLeaveDto);
     return this.leaveRepository.save(leave);
@@ -22,11 +22,16 @@ export class LeavesService {
   }
 
   async findOne(id: number): Promise<Leave> {
-    const leaves = await this.leaveRepository.findOne({
+    const leave = await this.leaveRepository.findOne({
       where: { leaveId: id },
       relations: ['employee'],
     });
-    return leaves;
+
+    if (!leave) {
+      throw new Error('Leave not found'); // throws an error
+    }
+
+    return leave;
   }
 
   async update(id: number, updateLeaveDto: UpdateLeaveDto): Promise<Leave> {

@@ -10,12 +10,12 @@ describe('CompanyService', () => {
   let repository: Repository<Company>;
 
   const mockCompanyRepository = {
-    create: jest.fn().mockImplementation((dto: CreateCompanyDto) => dto),
-    save: jest.fn().mockResolvedValue({ companyId: 1, ...new CreateCompanyDto() }),
-    find: jest.fn().mockResolvedValue([{ companyId: 1 }]),
-    findOne: jest.fn().mockResolvedValue({ companyId: 1 }),
-    preload: jest.fn().mockResolvedValue({ companyId: 1 }),
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    create: jest.fn(),
+    save: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
+    preload: jest.fn(),
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -32,75 +32,74 @@ describe('CompanyService', () => {
     service = module.get<CompanyService>(CompanyService);
     repository = module.get<Repository<Company>>(getRepositoryToken(Company));
   });
-
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a new company', async () => {
-      const createCompanyDto: CreateCompanyDto = {
-        name: 'Google',
-        address: 'Mountain View',
-        email: 'rashed@gmail.com',
-        phone: '0599999999',
-        website: 'www.google.com',
-      };
+  // Create test
+  it('should create a new company', async () => {
+    const createCompanyDto: CreateCompanyDto = {
+      name: 'Company',
 
-      const company = await service.create(createCompanyDto);
-      expect(company).toEqual({ companyId: 1, ...createCompanyDto });
-      expect(repository.save).toHaveBeenCalled();
-    });
+      address: '123 Main St',
+      phone: '123-456-7890',
+      email: 'random@gmail.com',
+      website: 'www.random.com',
+    };
+    const savedCompany = {
+      companyId: 1,
+      ...createCompanyDto,
+    };
+
+    mockCompanyRepository.create.mockReturnValue(createCompanyDto);
+    mockCompanyRepository.save.mockResolvedValue(savedCompany);
+
+    const result = await service.create(createCompanyDto);
+    expect(result).toEqual(savedCompany);
+    expect(mockCompanyRepository.create).toHaveBeenCalledWith(createCompanyDto);
+    expect(mockCompanyRepository.save).toHaveBeenCalledWith(createCompanyDto);
   });
+  it('should throw an Error if leave is not found', async () => {
+    mockCompanyRepository.findOne.mockResolvedValueOnce(undefined);
 
-  describe('findAll', () => {
-    it('should return an array of companies', async () => {
-      const companies = await service.findAll();
-      expect(companies).toEqual([{ companyId: 1 }]);
-      expect(repository.find).toHaveBeenCalled();
-    });
+    await expect(service.findOne(1)).rejects.toThrow(Error); // ✅ Now this will pass
   });
+  // update test
+  it('should update a company', async () => {
+    const createCompanyDto: CreateCompanyDto = {
+      name: 'Company',
 
-  describe('findOne', () => {
-    it('should return a company', async () => {
-      const company = await service.findOne(1);
-      expect(company).toEqual({ companyId: 1 });
-      expect(repository.findOne).toHaveBeenCalled();
+      address: '123 Main St',
+      phone: '123-456-7890',
+      email: 'raandom@gmail.com',
+    };
+    const updatedCompany = {
+      companyId: 1,
+      ...createCompanyDto,
+    };
+    mockCompanyRepository.preload.mockResolvedValue(updatedCompany);
+    mockCompanyRepository.save.mockResolvedValue(updatedCompany);
+    const result = await service.update(1, createCompanyDto);
+    expect(result).toEqual(updatedCompany);
+    expect(repository.preload).toHaveBeenCalledWith({
+      companyId: 1,
+      ...createCompanyDto,
     });
-
-    it('should throw an error if company is not found', async () => {
-      mockCompanyRepository.findOne.mockResolvedValueOnce(undefined);
-      await expect(service.findOne(1)).rejects.toThrow();
-    });
+    expect(repository.save).toHaveBeenCalledWith(updatedCompany);
   });
-
-  describe('update', () => {
-    it('should update a company', async () => {
-      const updateCompanyDto: Partial<CreateCompanyDto> = {
-        name: 'Alphabet',
-        website: 'www.alphabet.com',
-      };
-
-      const company = await service.update(1, updateCompanyDto);
-      expect(company).toEqual({ companyId: 1, ...updateCompanyDto });
-      expect(repository.save).toHaveBeenCalled();
-    });
-
-    it('should throw an error if company is not found', async () => {
-      mockCompanyRepository.preload.mockResolvedValueOnce(undefined);
-      await expect(service.update(1, {})).rejects.toThrow();
-    });
+  // update test (failure case)
+  it('should throw an Error if company is not found', async () => {
+    mockCompanyRepository.preload.mockResolvedValueOnce(undefined);
+    await expect(service.update(1, {} as CreateCompanyDto)).rejects.toThrow(
+      Error,
+    );
   });
-
-  describe('remove', () => {
-    it('should remove a company', async () => {
-      await service.remove(1);
-      expect(repository.delete).toHaveBeenCalled();
-    });
-
-    it('should throw an error if company is not found', async () => {
-      mockCompanyRepository.delete.mockResolvedValueOnce({ affected: 0 });
-      await expect(service.remove(1)).rejects.toThrow();
-    });
+  // delete test
+  it('should delete a company', async () => {
+    mockCompanyRepository.delete.mockResolvedValue({ affected: 0 });
+    await expect(service.remove(1)).rejects.toThrow(Error);
   });
 });

@@ -1,6 +1,7 @@
 import { IsDate, IsNumber } from 'class-validator';
 
 export class CreateSalaryDto {
+  salaryId: number; // Salary ID
   @IsNumber({}, { message: 'Base salary must be a number' })
   baseSalary: number; // Base salary
 

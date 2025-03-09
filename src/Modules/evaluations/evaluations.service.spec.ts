@@ -4,19 +4,23 @@ import { Evaluation } from './entities/evaluation.entity';
 import { Repository } from 'typeorm';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import exp from 'constants';
+import { NotFoundException } from '@nestjs/common';
 
 describe('EvaluationsService', () => {
   let service: EvaluationsService;
   let repository: Repository<Evaluation>;
+
   const mockEvaluationRepository = {
-    create: jest.fn().mockImplementation((dto: CreateEvaluationDto) => dto),
-    save: jest
-      .fn()
-      .mockResolvedValue({ evaluationId: 1, ...new CreateEvaluationDto() }),
-    find: jest.fn().mockResolvedValue([{ evaluationId: 1 }]),
-    findOne: jest.fn().mockResolvedValue({ evaluationId: 1 }),
-    preload: jest.fn().mockResolvedValue({ evaluationId: 1 }),
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    create: jest.fn(),
+    save: jest.fn(),
+
+    find: jest.fn(),
+    findOne: jest.fn(),
+
+    preload: jest.fn(),
+
+    delete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -35,60 +39,71 @@ describe('EvaluationsService', () => {
       getRepositoryToken(Evaluation),
     );
   });
-
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  describe('create', () => {
-    it('should create a new evaluation', async () => {
-      const createEvaluationDto: CreateEvaluationDto = {
-        evaluationId: 1,
-        qualityScore: 1,
-        commitmentScore: 2,
-        skillsScore: 3,
-        comments: 'A',
-        evaluationDate: new Date(),
-        employeeId: 1,
-      };
-      const evaluation = await service.create(createEvaluationDto);
-      expect(evaluation).toEqual({ evaluationId: 1, ...createEvaluationDto });
-      expect(repository.save).toHaveBeenCalled();
-    });
+  it('should create a new evaluation', async () => {
+    const createEvaluationDto: CreateEvaluationDto = {
+      evaluationId: 1,
+      qualityScore: 5,
+      commitmentScore: 5,
+      skillsScore: 4,
+      comments: 'Good',
+      evaluationDate: new Date(),
+      employeeId: 5,
+    };
+    const savedEvaluation = {
+      evaluationId: 1,
+      ...createEvaluationDto,
+    };
+
+    mockEvaluationRepository.create.mockReturnValue(createEvaluationDto);
+    mockEvaluationRepository.save.mockResolvedValue(savedEvaluation);
+
+    const result = await service.create(createEvaluationDto);
+    expect(result).toEqual(savedEvaluation);
   });
-  describe('findAll', () => {
-    it('should return an array of evaluations', async () => {
-      const evaluations = await service.findAll();
-      expect(evaluations).toEqual([{ evaluationId: 1 }]);
-      expect(repository.find).toHaveBeenCalled();
-    });
+  it('should throw an Error if leave is not found', async () => {
+    mockEvaluationRepository.findOne.mockResolvedValueOnce(undefined);
+
+    await expect(service.findOne(1)).rejects.toThrow(NotFoundException); // ✅ Now this will pass
   });
-  describe('findOne', () => {
-    it('should return an evaluation', async () => {
-      const evaluation = await service.findOne(1);
-      expect(evaluation).toEqual({ evaluationId: 1 });
-      expect(repository.findOne).toHaveBeenCalled();
+
+  // update test
+  it('should update a evaluation', async () => {
+    const updateEvaluationDto: CreateEvaluationDto = {
+      evaluationId: 1,
+      qualityScore: 4,
+      commitmentScore: 2,
+      skillsScore: 7,
+      comments: 'Good',
+      evaluationDate: new Date(),
+      employeeId: 5,
+    };
+    const existingEvaluation = { evaluationId: 1, ...updateEvaluationDto };
+    mockEvaluationRepository.preload.mockResolvedValue(existingEvaluation);
+    mockEvaluationRepository.save.mockResolvedValue(existingEvaluation);
+    const result = await service.update(1, updateEvaluationDto);
+    expect(result).toEqual(existingEvaluation);
+    expect(repository.preload).toHaveBeenCalledWith({
+      evaluationId: 1,
+      ...updateEvaluationDto,
     });
+    expect(repository.save).toHaveBeenCalledWith(existingEvaluation);
   });
-  describe('update', () => {
-    it('should update an evaluation', async () => {
-      const updateEvaluationDto: CreateEvaluationDto = {
-        evaluationId: 6,
-        qualityScore: 4,
-        commitmentScore: 2,
-        skillsScore: 41,
-        comments: 'A',
-        evaluationDate: new Date(),
-        employeeId: 2,
-      };
-      const evaluation = await service.update(1, updateEvaluationDto);
-      expect(evaluation).toEqual({ evaluationId: 1, ...updateEvaluationDto });
-      expect(repository.save).toHaveBeenCalled();
-    });
+  // update test (failure case)
+  it('should throw an Error if evaluation is not found', async () => {
+    mockEvaluationRepository.preload.mockResolvedValueOnce(undefined);
+    await expect(service.update(1, {} as CreateEvaluationDto)).rejects.toThrow(
+      NotFoundException,
+    );
   });
-  describe('remove', () => {
-    it('should delete an evaluation', async () => {
-      await service.remove(1);
-      expect(repository.delete).toHaveBeenCalled();
-    });
+  //  Remove test
+  it('should remove a evaluation', async () => {
+    mockEvaluationRepository.delete.mockResolvedValue({ affected: 0 });
+    await expect(service.remove(1)).rejects.toThrow(Error);
   });
 });

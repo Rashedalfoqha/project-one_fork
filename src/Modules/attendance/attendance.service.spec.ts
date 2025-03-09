@@ -9,14 +9,12 @@ describe('AttendanceService', () => {
   let service: AttendanceService;
   let repository: Repository<Attendance>;
   const mockAttendanceRepository = {
-    create: jest.fn().mockImplementation((dto: CreateAttendanceDto) => dto),
-    save: jest
-      .fn()
-      .mockResolvedValue({ attendanceId: 1, ...new CreateAttendanceDto() }),
-    find: jest.fn().mockResolvedValue([{ attendanceId: 1 }]),
-    findOne: jest.fn().mockResolvedValue({ attendanceId: 1 }),
-    preload: jest.fn().mockResolvedValue({ attendanceId: 1 }),
-    delete: jest.fn().mockResolvedValue({ affected: 1 }),
+    create: jest.fn(),
+    save: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
+    preload: jest.fn(),
+    delete: jest.fn(),
   };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,53 +32,101 @@ describe('AttendanceService', () => {
       getRepositoryToken(Attendance),
     );
   });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  describe('create', () => {
-    it('should create a new attendance', async () => {
-      const createAttendanceDto: CreateAttendanceDto = {
+  //  crerate test
+  it('should create a new attendance', async () => {
+    const createAttendanceDto: CreateAttendanceDto = {
+      attendanceId: 1,
+      employeeId: 1,
+      checkInTime: new Date(),
+      checkOutTime: new Date(),
+      attendanceDate: new Date(),
+    };
+    const savedAttendance = {
+      attendanceId: 1,
+      ...createAttendanceDto,
+    };
+
+    mockAttendanceRepository.create.mockReturnValue(createAttendanceDto);
+    mockAttendanceRepository.save.mockResolvedValue(savedAttendance);
+
+    const result = await service.create(createAttendanceDto);
+    expect(result).toEqual(savedAttendance);
+  });
+  //findAll test
+  it('should return all attendance', async () => {
+    const attendance = [
+      {
         attendanceId: 1,
+        employeeId: 1,
         checkInTime: new Date(),
         checkOutTime: new Date(),
-        attendanceDate:  new Date(),
-      };
-      const attendance = await service.create(createAttendanceDto);
-      expect(attendance).toEqual({ attendanceId: 1, ...createAttendanceDto });
-      expect(repository.save).toHaveBeenCalled();
-    });
+        status: 'Present',
+      },
+    ];
+    mockAttendanceRepository.find.mockResolvedValue(attendance);
+
+    const result = await service.findAll();
+    expect(result).toEqual(attendance);
   });
-  describe('findAll', () => {
-    it('should return an array of attendance', async () => {
-      const attendance = await service.findAll();
-      expect(attendance).toEqual([{ attendanceId: 1 }]);
-      expect(repository.find).toHaveBeenCalled();
-    });
+  //findOne test
+  it('should return one attendance', async () => {
+    const attendance = {
+      attendanceId: 1,
+      employeeId: 1,
+      checkInTime: new Date(),
+      checkOutTime: new Date(),
+      status: 'Present',
+    };
+    mockAttendanceRepository.findOne.mockResolvedValue(attendance);
+
+    const result = await service.findOne(1);
+    expect(result).toEqual(attendance);
   });
-  describe('findOne', () => {
-    it('should return an attendance', async () => {
-      const attendance = await service.findOne(1);
-      expect(attendance).toEqual({ attendanceId: 1 });
-      expect(repository.findOne).toHaveBeenCalled();
-    });
+  //update test
+  it('should update an attendance', async () => {
+    const updateAttendanceDto: CreateAttendanceDto = {
+      attendanceId: 1,
+      employeeId: 1,
+      checkInTime: new Date(),
+      checkOutTime: new Date(),
+      attendanceDate: new Date(),
+    };
+    const updatedAttendance = {
+      attendanceId: 1,
+      ...updateAttendanceDto,
+    };
+
+    mockAttendanceRepository.preload.mockResolvedValue(updatedAttendance);
+    mockAttendanceRepository.save.mockResolvedValue(updatedAttendance);
+
+    const result = await service.update(1, updateAttendanceDto);
+    expect(result).toEqual(updatedAttendance);
   });
-  describe('update', () => {
-    it('should update an attendance', async () => {
-      const updateAttendanceDto: CreateAttendanceDto = {
-        attendanceId: 1,
-        checkInTime: new Date(),
-        checkOutTime: new Date(),
-        attendanceDate: new Date(),
-      };
-      const attendance = await service.update(1, updateAttendanceDto);
-      expect(attendance).toEqual({ attendanceId: 1, ...updateAttendanceDto });
+  //remove test
+  it('should remove an attendance', async () => {
+    const expectedResponse = {
+      message: 'Attendance record 1 deleted successfully',
+    };
+
+    mockAttendanceRepository.findOne.mockResolvedValue({
+      attendanceId: 1,
+      employeeId: 1,
+      checkInTime: new Date(),
+      checkOutTime: new Date(),
     });
-  });
-  describe('remove', () => {
-    it('should delete an attendance', async () => {
-      await service.remove(1);
-      expect(repository.delete).toHaveBeenCalled();
-    });
+
+    mockAttendanceRepository.delete.mockResolvedValue({});
+
+    const result = await service.remove(1);
+
+    expect(result).toEqual(expectedResponse);
+    expect(mockAttendanceRepository.delete).toHaveBeenCalledWith(1);
   });
 });

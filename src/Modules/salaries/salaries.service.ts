@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSalaryDto } from './dto/create-salary.dto';
 import { UpdateSalaryDto } from './dto/update-salary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,6 +28,9 @@ export class SalariesService {
       where: { salaryId: id },
       relations: ['employees'],
     });
+    if (!salaries) {
+      throw new NotFoundException(`Salary with ID ${id} not found`); 
+    }
     return salaries;
   }
 
@@ -36,6 +39,9 @@ export class SalariesService {
       salaryId: id,
       ...updateSalaryDto,
     });
+    if (!salary) {
+      throw new NotFoundException(`Salary with ID ${id} not found`);
+    }
     return this.salaryRepositroy.save(salary);
   }
 

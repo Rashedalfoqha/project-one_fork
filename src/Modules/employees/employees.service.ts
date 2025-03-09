@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
@@ -32,6 +32,9 @@ export class EmployeesService {
         'attendances',
       ],
     });
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${id} not found`);
+    }
     return employee;
   }
 
@@ -43,6 +46,9 @@ export class EmployeesService {
       employeeId: id,
       ...updateEmployeeDto,
     });
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${id} not found`);
+    }
     return this.employeeRepository.save(employee);
   }
 

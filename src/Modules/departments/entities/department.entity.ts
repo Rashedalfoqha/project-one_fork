@@ -7,7 +7,7 @@ export class Department {
   departmentId: number;
 
   @Column({ length: 100 })
-  name: string;
+  departmentName: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;

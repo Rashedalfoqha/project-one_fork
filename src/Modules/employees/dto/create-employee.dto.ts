@@ -6,10 +6,13 @@ import {
   IsDate,
   IsNumber,
   IsPositive,
+  isNumber,
+  isNotEmpty,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateEmployeeDto {
+  employeeId: number; // Employee ID
   @IsString({ message: 'Name must be a string' })
   @IsNotEmpty({ message: 'Name is required' })
   name: string; // Employee name

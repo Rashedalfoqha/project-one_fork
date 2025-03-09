@@ -14,4 +14,6 @@ export class CreateAttendanceDto {
   @IsDate({ message: 'Attendance date must be a valid date' }) // Validates it as a Date object
   @Type(() => Date)
   attendanceDate: Date;
+  
+  employeeId: number;
 }

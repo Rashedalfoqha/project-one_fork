@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto';
 import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,6 +26,9 @@ export class EvaluationsService {
       where: { evaluationId: id },
       relations: ['employee'],
     });
+    if (!evaluation) {
+      throw new NotFoundException(`Evaluation with ID ${id} not found`);
+    }
     return evaluation;
   }
 
@@ -37,6 +40,9 @@ export class EvaluationsService {
       evaluationId: id,
       ...updateEvaluationDto,
     });
+    if (!evaluation) {
+      throw new NotFoundException(`Evaluation with ID ${id} not found`);
+    }
     return this.evaluationRepository.save(evaluation);
   }
 

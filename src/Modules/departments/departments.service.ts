@@ -21,7 +21,7 @@ export class DepartmentsService {
   }
 
   async findOne(id: number): Promise<Department> {
-    const department = this.departmentRepository.findOne({
+    const department = await this.departmentRepository.findOne({
       where: { departmentId: id },
       relations: ['employees'],
     });
@@ -30,7 +30,6 @@ export class DepartmentsService {
     }
     return department;
   }
-
   async update(
     id: number,
     updateDepartmentDto: UpdateDepartmentDto,

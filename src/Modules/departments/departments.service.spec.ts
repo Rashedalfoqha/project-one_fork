@@ -68,7 +68,7 @@ describe('DepartmentsService', () => {
   });
   // find one test
   it('should throw an Error if department is not found', async () => {
-    mockDepartmentRepository.findOne.mockResolvedValueOnce(undefined);
+    mockDepartmentRepository.findOne.mockResolvedValueOnce(null);
   
     await expect(service.findOne(1)).rejects.toThrow(NotFoundException);
   });
